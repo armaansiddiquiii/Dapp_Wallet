@@ -1,26 +1,32 @@
-import { useWallet } from "@solana/wallet-adapter-react";
-import { useConnection } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import React, { useState } from 'react'
+import InputComponent from './Input';
+import ButtonComponent from './Button';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
-export function RequestAirdrop() {
-  const wallet = useWallet();
-  const { connection } = useConnection();
+const Airdrop = ({connection, wallet, balanceChange, setBalanceChange}) => {
+    const [amount, setAmount] = useState(0);
+    const [isTransfered, setIsTransfered] = useState(false);
 
-  async function requestAirdrop() {
-    let amount = document.getElementById("amount").value;
-    await connection.requestAirdrop(
-      wallet.publicKey,
-      amount * LAMPORTS_PER_SOL
-    );
-    alert("Airdropped " + amount + " SOL to " + wallet.publicKey.toBase58());
-  }
+    const sendAirDropToUser = async () => {
+        if(!amount) return;
+        await connection.requestAirdrop(wallet.publicKey, amount * LAMPORTS_PER_SOL);
+        setIsTransfered(true);
+    }
 
   return (
-    <div>
-      <br />
-      <br />
-      <input id="amount" type="text" placeholder="Amount" />
-      <button onClick={requestAirdrop}>Request Airdrop</button>
+    <div className='airdrop'>
+       <b> <h1>WALLET-SPACE</h1> </b>
+        <InputComponent type="number" placeholder='Amount' setAmount={setAmount} />
+        {/* <button onClick={sendAirDropToUser}>Send Airdrop</button> */}
+        <div className='btn'><ButtonComponent onClickFunction={sendAirDropToUser} text={"Request Airdrop"} /></div>
+        {/* <h1>Your public key is: {wallet.publicKey.toString()}</h1> */}
+        <div className="transaction-successful">
+          {
+              isTransfered && <h2>Transaction successful!</h2>
+          }
+        </div>
     </div>
-  );
+  )
 }
+
+export default Airdrop

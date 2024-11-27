@@ -1,35 +1,42 @@
-import React, { useMemo } from "react";
+import React, { FC, useMemo, useState } from 'react';
+import { ConnectionProvider, WalletProvider, useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
 import {
-  ConnectionProvider,
-  WalletProvider,
-} from "@solana/wallet-adapter-react";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import {
-  WalletModalProvider,
-  WalletDisconnectButton,
-  WalletMultiButton,
-} from "@solana/wallet-adapter-react-ui";
-import { clusterApiUrl } from "@solana/web3.js";
-import "@solana/wallet-adapter-react-ui/styles.css";
+    WalletModalProvider,
+    WalletDisconnectButton,
+    WalletMultiButton
+} from '@solana/wallet-adapter-react-ui';
+// import { clusterApiUrl } from '@solana/web3.js';
+import "./App.css";
 
+// Default styles that can be overridden by your app
+import '@solana/wallet-adapter-react-ui/styles.css';
+import Airdrop from './components/Airdrop';
+import { ShowSolBalance } from './components/ShowSolBalance';
+import { SignMessage } from './components/SignMessage';
+import { SendTokens } from './components/SendTokens';
 
 function App() {
-  const network = WalletAdapterNetwork.Devnet;
-
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
+  const { connection } = useConnection();
+  const wallet = useWallet();
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={[]} autoConnect>
-        <WalletModalProvider>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <WalletMultiButton />
-            <WalletDisconnectButton />
-          </div>
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
+    <main>
+      <div className="page-1">
+        <div className="wallet-btns">
+          <WalletMultiButton />
+          <WalletDisconnectButton />
+        </div>
+        <Airdrop connection={connection} wallet={wallet} />
+        <ShowSolBalance connection={connection} wallet={wallet} />
+      </div>
+      <div className="page-2">
+        <SendTokens connection={connection} wallet={wallet} />
+        <SignMessage wallet={wallet} />
+      </div>
+    </main>
+  )
 }
 
-export default App;
+export default App
+
