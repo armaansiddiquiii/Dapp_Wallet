@@ -5,7 +5,7 @@ import './index.css'
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 
-const endpoint = "https://solana-devnet.g.alchemy.com/v2/vQNJrsHaRYsDB8s68U5dF1b4qYixBOym"
+const endpoint = "https://solana-devnet.g.alchemy.com/v2/cNo_T1oc-9sFkdYBE8PdXvNCotRj-h3-"
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
